@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'tw'
+
+class TwGit
+  CAPTURE_FILE = "#{ENV['HOME']}/twgit.jpg"
+
+  def initialize(argv)
+    quoted_argv = []
+    argv.each_with_index do |arg, index|
+      if arg !~ /^-/ and (index > 0 or argv[index-1] =~ /^-/)
+        quoted_argv.push "'#{arg}'"
+      else
+        quoted_argv.push arg
+      end
+    end
+    @cmd = "git #{quoted_argv.join(' ')}"
+    @tw = Tw::Client.new
+    @tw.auth
+  end
+
+  
+  def exec
+    exit 1 unless system @cmd
+    unless capture
+      STDERR.puts "capture failed"
+      exit 1
+    end
+    @tw.tweet_with_file @cmd, File.open(CAPTURE_FILE)
+    File.delete CAPTURE_FILE
+  end
+
+  private
+  def capture
+    system "imagesnap -w 2.0 #{CAPTURE_FILE}"
+    File.exists? CAPTURE_FILE
+  end
+end
+
+twgit = TwGit.new ARGV
+twgit.exec
