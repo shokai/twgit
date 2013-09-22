@@ -14,9 +14,13 @@ Requirements
 Install Dependencies
 --------------------
 
-    % gem install tw
-    % tw
+Install [Tw](http://shokai.github.io/tw)
 
+    % gem install tw
+    % tw --user:add
+
+
+Install [ImageSnap](http://iharder.sourceforge.net/current/macosx/imagesnap/)
 
     % brew install imagesnap
 
